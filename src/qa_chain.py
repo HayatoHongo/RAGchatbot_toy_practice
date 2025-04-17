@@ -1,7 +1,6 @@
-# src/qa_chain.py
-
 from pathlib import Path
-from chromadb import PersistentClient
+from chromadb import Client
+from chromadb.config import Settings
 from langchain.chains import RetrievalQA
 from langchain_community.chat_models import ChatOpenAI
 from langchain_community.vectorstores import Chroma
@@ -12,14 +11,11 @@ ROOT    = Path(__file__).parent.parent
 DB_PATH = str(ROOT / "chroma_db")
 
 def get_qa_chain(emb=None):
-    """
-    build_vector_store で作った PersistentClient を流用し、
-    Retriever + RetrievalQA を返す。
-    """
     if emb is None:
         emb = OpenAIEmbeddings(model="text-embedding-ada-002")
 
-    client      = PersistentClient(path=DB_PATH)
+    # 同じく Settings に persist_directory のみ
+    client      = Client(Settings(persist_directory=DB_PATH))
     vectorstore = Chroma(
         client=client,
         collection_name="internal_docs",

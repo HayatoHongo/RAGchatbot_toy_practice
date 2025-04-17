@@ -1,8 +1,24 @@
-streamlit
+# Web フレームワーク
+streamlit>=1.10.0
+
+# 環境変数読み込み
 python-dotenv
-tiktoken
+
+# OpenAI 埋め込み・モデル呼び出し
 openai
-chromadb>=0.4.0,<0.6.0
+tiktoken
+
+# ChromaDB (DuckDB+Parquet ストレージ対応)
+chromadb>=0.5.23,<0.6.0
+
+# LangChain 用コミュニティパッケージ
 langchain-community
 langchain-chroma
 langchain-openai
+
+# テキスト分割用
+langchain-text-splitters
+
+# データ処理やユーティリティ
+numpy
+pandas

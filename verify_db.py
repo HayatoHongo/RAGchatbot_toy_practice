@@ -1,14 +1,13 @@
-# verify_db.py
-
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 from src.data_loader import docs
 from src.preprocess import chunk_texts
 from langchain_community.embeddings import OpenAIEmbeddings
-from chromadb import PersistentClient
+from chromadb import Client
+from chromadb.config import Settings
 
-# 環境変数設定
+# 環境変数
 load_dotenv()
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
@@ -18,8 +17,9 @@ def main():
 
     ROOT    = Path(__file__)
     DB_PATH = str(ROOT / "chroma_db")
-    client  = PersistentClient(path=DB_PATH)
-    col     = client.get_collection(name="internal_docs")
+
+    client = Client(Settings(persist_directory=DB_PATH))
+    col    = client.get_or_create_collection("internal_docs")
 
     print("👉 登録チャンク数:", col.count())
 
@@ -31,7 +31,7 @@ def main():
         include=["documents","metadatas","distances"],
     )
     print(res)
-    for i, (d,m,dist) in enumerate(zip(res["documents"][0], res["metadatas"][0], res["distances"][0]), 1):
+    for i,(d,m,dist) in enumerate(zip(res["documents"][0], res["metadatas"][0], res["distances"][0]), 1):
         print(f"\nResult {i}: source={m['source']} (dist={dist})")
         print(d[:100], "…")
 
