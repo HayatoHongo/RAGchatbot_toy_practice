@@ -8,18 +8,18 @@ from src.preprocess import chunk_texts
 from langchain_community.embeddings import OpenAIEmbeddings
 from chromadb import PersistentClient
 
-# 環境変数
+# 環境変数設定
 load_dotenv()
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 def main():
     chunks, metadatas = chunk_texts(docs)
-    emb    = OpenAIEmbeddings(model="text-embedding-ada-002")
+    emb = OpenAIEmbeddings(model="text-embedding-ada-002")
 
-    ROOT   = Path(__file__)
-    DB_PATH= str(ROOT / "chroma_db")
-    client = PersistentClient(path=DB_PATH)
-    col    = client.get_collection(name="internal_docs")
+    ROOT    = Path(__file__)
+    DB_PATH = str(ROOT / "chroma_db")
+    client  = PersistentClient(path=DB_PATH)
+    col     = client.get_collection(name="internal_docs")
 
     print("👉 登録チャンク数:", col.count())
 
@@ -31,8 +31,8 @@ def main():
         include=["documents","metadatas","distances"],
     )
     print(res)
-    for i,(d,m,dist) in enumerate(zip(res["documents"][0], res["metadatas"][0], res["distances"][0]),1):
-        print(f"\nResult {i}: {m['source']} (dist={dist})")
+    for i, (d,m,dist) in enumerate(zip(res["documents"][0], res["metadatas"][0], res["distances"][0]), 1):
+        print(f"\nResult {i}: source={m['source']} (dist={dist})")
         print(d[:100], "…")
 
 if __name__ == "__main__":
