@@ -6,6 +6,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 import streamlit as st
 from chromadb import PersistentClient
+from vector_store import build_vector_store
+# 起動時に必ず走らせる
+emb = build_vector_store(chunks, metadatas)
 
 # --- 環境変数読み込み ---
 load_dotenv()
